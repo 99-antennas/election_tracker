@@ -8,6 +8,7 @@ output/
 .vscode
 *temp-plot.html
 *.ipynb_checkpoints*
+election-tracker-268319-9f3877a17c99.json
 
 # Large files
 
