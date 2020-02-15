@@ -1,0 +1,25 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+jupyter = "*"
+nbextensions = "*"
+
+[packages]
+pandas = "*"
+requests = "*"
+jupyter-contrib-nbextensions = "*"
+wordcloud = "*"
+plotly = "*"
+matplotlib = "*"
+colorlover = "*"
+jupyter = "*"
+notebook = "*"
+scipy = "*"
+phonenumbers = "*"
+email-validator = "*"
+
+[requires]
+python_version = "3.7"

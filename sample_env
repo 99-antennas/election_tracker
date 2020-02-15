@@ -1,0 +1,30 @@
+```
+This file is an example of how to setup your .env file. 
+The `settings.py` script relies on these 
+vars to set notebook defaults and output formatted .csv's. 
+For presentation notebooks, your .env file must include your 
+contact information.
+```
+
+### Analyst Contact ###
+
+ANALYST="Your Name"  
+CONTACT="your.email@simonandschuster.com"
+WEBSITE="https://github.com/orgs/snsdigitaldevs/teams/tiller" # update by project 
+
+### DB Connections ###
+
+#internal database
+SS_PRD_SERVER='dbc-db-prd.schuster.com' #10.118.68.18
+SS_PRD_SERVER_UID='username' 
+SS_PRD_SERVER_PASSWORD='password' 
+
+### API Connections ###
+
+#airtable 
+AIRTABLE_KEY="somekeyhere"
+AIRTABLE_ENDPOINT="someendpoint url here"
+
+#bookstat
+BOOKSTAT_USER="your username"
+BOOKSTAT_PASS="somekeyhere"
