@@ -10,10 +10,10 @@ pipenv run pip freeze > requirements.txt
 
 
 # Create Cloud buckets 
-# Note: If buckets exist this will generate an error
+# Note: If buckets exist this will generate an error - Ignore
 pipenv run python ./bin/create_storage_buckets.py
 
-# Set Google CLoud project
+# Set Google Cloud project
 gcloud --quiet config set project $GCP_PROJECT_NAME
 
 # If not default, set region/zone
@@ -21,6 +21,7 @@ gcloud --quiet config set compute/zone ${GCP_COMPUTE_ZONE}
 
 
 # Create PubSub topic
+# Note: If topic exist this will generate an error - Ignore
 gcloud pubsub topics create $GCP_PUBSUB_TOPIC
 
 # Deploy function 
@@ -33,4 +34,12 @@ gcloud functions deploy $GCP_FUNCTION_NAME \
 --entry-point $GCP_FUNCTION_ENTRY_POINT \
 --service-account api-requests@election-tracker-268319.iam.gserviceaccount.com \
 --set-env-vars GOOGLE_CIVIC_API_KEY=$GOOGLE_CIVIC_API_KEY,GOOGLE_GEOCODING_API_KEY=$GOOGLE_GEOCODING_API_KEY
+
+# Create Google Cloud Scheduler cron job
+gcloud scheduler jobs create pubsub CivicInfoApi-elections-daily \
+--schedule="15 20 * * *" \
+--topic $GCP_PUBSUB_TOPIC \
+--message-body "civic info api elections daily" \
+--max-retry-attempts 5
+
 #End
