@@ -16,8 +16,8 @@ def run_current_elections(event, context):
     Cloud function to run job to fetch election data from Google Civic Information API.
     Stores data in a cloud storage bucket as a json file.
     """
-
-    GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    # Local testing Only 
+    # GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
     TODAY = dt.datetime.now()
 
     # Job status
