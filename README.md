@@ -117,8 +117,11 @@ SAMPLE DATA
 [/test/sample_data/](/test/sample/data)
 
 OTHER GUIDANCE
+[Google Cloud SDK Python](https://cloud.google.com/storage/docs/reference/libraries#client-libraries-install-python)
 [Deploying a Cloud Function](https://hackingandslacking.com/creating-google-cloud-functions-running-python-3-7-8034e066a130)
 [Granting Roles to Service Accounts](https://cloud.google.com/iam/docs/granting-roles-to-service-accounts)
+[Authenticating Apps in Production](https://cloud.google.com/docs/authentication/production)
+
 
 SUGGESTING CHANGES
 If you have suggestions, please submit a pull request.
