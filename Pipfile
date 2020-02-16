@@ -4,9 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-[jupyterlab = "*"]
-[pylint = "*"]
-[pytest = "*"]
+#jupyterlab = "*"
+#pylint = "*"
+#pytest = "*"
 
 [packages]
 pandas = "*"
