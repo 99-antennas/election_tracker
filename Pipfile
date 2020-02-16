@@ -4,13 +4,13 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-jupyterlab = "*"
-flask = "*"
+[jupyterlab = "*"]
+[pylint = "*"]
+[pytest = "*"]
 
 [packages]
 pandas = "*"
 requests = "*"
-phonenumbers = "*"
 email-validator = "*"
 nameparser = "*"
 google-cloud-storage = "*"

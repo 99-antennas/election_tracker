@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# coding: utf-8
+# Copyright 2020 99 Antennas LLC 
+
 """
 Fetch elections from the Google Civic API
 """
@@ -35,6 +39,5 @@ class ElectionsFetcher():
         except requests.exceptions.RequestException as error:
             # Catastrophic error 
             logging.error(error)
-            raise
-            
+            raise    
 # End

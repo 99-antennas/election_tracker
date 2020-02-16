@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-# Copyright 99 Antennas LLC 2020
+# Copyright 2020 99 Antennas LLC
 
 import sys
 import os
@@ -14,11 +14,16 @@ from src.utils import CloudStorageClient
 def run_current_elections():
     """
     Cloud function to run job to fetch election data from Google Civic Information API.
+    Stores data in a cloud storage bucket as a json file. 
     """
+
     GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
     TODAY = dt.datetime.now()
-
+    
+    # Job status
     logging.info("Starting job fetch elections.")
+
+    # Make API call 
     get_elections = ElectionsFetcher()
     data = get_elections.fetch_elections()
 
@@ -35,20 +40,19 @@ def run_current_elections():
             logging.info(f"Data saved to '{filepath}''")
         except Exception as e: 
             logging.error(e)
+            raise
     else: 
         logging.error("Error: No data returned.")
-        raise
-        
+        return
+
     # Upload temp file to Google Gloud Storage
     client = CloudStorageClient()
     bucket_name = "current_elections"
-    # Load temp file to gcp as "current_elections.json"
+    # Store file as most current
     client.upload_file(filepath, bucket_name, blob_name='current_elections.json')
-    # Load temp file to gcp by date
+    # Store file by date
     client.upload_file(filepath, bucket_name, blob_name=f'{TODAY}.json')
-
-    logging.info("Completed job fecth elections.")
+    
+    # Job status
+    logging.info("Completed job fetch elections.")
 # End
-
-
-
