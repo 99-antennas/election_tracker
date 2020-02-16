@@ -2,6 +2,8 @@
 
 Project to get candidate election information from Google Civic Information. Google Civic Information offers a number of endpoints that allow the retrieval of election information, including candidate information. However, these endpoints are only accessible for a short window of time before or after a given election. In addition, primary elections are treated as individual elections and candidate information can only be retrieved by address (as opposed to OCD-ID or other identifier.)
 
+Creates a series of functions designed to be run as Google Cloud Functions. 
+
 REQUIREMENTS
 Python 3.7
 

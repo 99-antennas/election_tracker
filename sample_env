@@ -1,2 +1,2 @@
-GOOGLE_CIVIC_API="your-api-key"
-GOOGLE_GEOCODING_API="your-api-key"
+GOOGLE_CIVIC_API_KEY="your-api-key"
+GOOGLE_GEOCODING_API_KEY="your-api-key"

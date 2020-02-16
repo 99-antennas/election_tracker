@@ -1,1 +1,0 @@
-#store reports that are shared externally to end users and internal clients in this directory

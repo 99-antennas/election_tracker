@@ -1,0 +1,113 @@
+{
+    "kind": "civicinfo#electionsQueryResponse",
+    "elections": [
+        {
+            "id": "2000",
+            "name": "VIP Test Election",
+            "electionDay": "2021-06-06",
+            "ocdDivisionId": "ocd-division/country:us"
+        },
+        {
+            "id": "4896",
+            "name": "Wisconsin State Primary Election",
+            "electionDay": "2020-02-18",
+            "ocdDivisionId": "ocd-division/country:us/state:wi"
+        },
+        {
+            "id": "4897",
+            "name": "South Carolina Presidential Primary",
+            "electionDay": "2020-02-29",
+            "ocdDivisionId": "ocd-division/country:us/state:sc"
+        },
+        {
+            "id": "4898",
+            "name": "Alabama Presidential and State Primary Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:al"
+        },
+        {
+            "id": "4899",
+            "name": "Arkansas Presidential Primary Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:ar"
+        },
+        {
+            "id": "4900",
+            "name": "California Presidential Primary Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:ca"
+        },
+        {
+            "id": "4901",
+            "name": "Colorado Presidential Primary Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:co"
+        },
+        {
+            "id": "4904",
+            "name": "Minnesota Presidential Primary Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:mn"
+        },
+        {
+            "id": "4907",
+            "name": "North Carolina Presidential and State Primary Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:nc"
+        },
+        {
+            "id": "4908",
+            "name": "Oklahoma Presidential Primary Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:ok"
+        },
+        {
+            "id": "4910",
+            "name": "Utah Presidential Primary Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:ut"
+        },
+        {
+            "id": "4912",
+            "name": "Vermont Presidential Primary Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:vt"
+        },
+        {
+            "id": "4914",
+            "name": "Michigan Presidential Primary Election",
+            "electionDay": "2020-03-10",
+            "ocdDivisionId": "ocd-division/country:us/state:mi"
+        },
+        {
+            "id": "4924",
+            "name": "Illinois Presidential and State Primary Election",
+            "electionDay": "2020-03-17",
+            "ocdDivisionId": "ocd-division/country:us/state:il"
+        },
+        {
+            "id": "4930",
+            "name": "Louisiana Presidential Primary Election",
+            "electionDay": "2020-04-04",
+            "ocdDivisionId": "ocd-division/country:us/state:la"
+        },
+        {
+            "id": "4939",
+            "name": "Rhode Island House District 56 Special Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:ri"
+        },
+        {
+            "id": "4980",
+            "name": "Rhode Island Providence Ward 1 Special Election",
+            "electionDay": "2020-04-07",
+            "ocdDivisionId": "ocd-division/country:us/state:ri"
+        },
+        {
+            "id": "4981",
+            "name": "Rhode Island Providence Ward 1 Special Primary Election",
+            "electionDay": "2020-03-03",
+            "ocdDivisionId": "ocd-division/country:us/state:ri"
+        }
+    ]
+}
