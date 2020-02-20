@@ -37,6 +37,7 @@ gcloud functions deploy $GCP_FUNCTION_NAME \
 
 # Create Google Cloud Scheduler cron job
 gcloud scheduler jobs create pubsub CivicInfoApi-elections-daily \
+--project $GCP_PROJECT_NAME \
 --schedule="15 20 * * *" \
 --topic $GCP_PUBSUB_TOPIC \
 --message-body "civic info api elections daily" \

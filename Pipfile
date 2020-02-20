@@ -4,9 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-#jupyterlab = "*"
-#pylint = "*"
-#pytest = "*"
+jupyterlab = "*"
+pylint = "*"
+pytest = "*"
 
 [packages]
 pandas = "*"
@@ -14,6 +14,8 @@ requests = "*"
 email-validator = "*"
 nameparser = "*"
 google-cloud-storage = "*"
+jupyterlab = "*"
+tqdm = "*"
 
 [requires]
 python_version = "3.7"

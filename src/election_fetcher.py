@@ -3,7 +3,7 @@
 # Copyright 2020 99 Antennas LLC 
 
 """
-Fetch elections from the Google Civic API
+Fetch elections from the Google Civic Information API
 """
 import sys
 import os

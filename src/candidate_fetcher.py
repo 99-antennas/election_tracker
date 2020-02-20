@@ -3,162 +3,93 @@
 # Copyright 2020 99 Antennas LLC 
 
 """
-Fetch elections info and candidate data from Google Civic API
+Fetch candidates info from Google Civic Information API
 """
-
+import sys
 import os
-import json
 import logging
-
-import pandas as pd
+import json
 import requests
-
-from django.conf import settings
-from django.core.management.base import BaseCommand
-from nameparser import HumanName
-from newsapp.models import Candidate
+from google.cloud import storage
 
 
-class District():
-    def __init__(self, name, kg_foreign_key):
-        self.name = name
-        self.kg_foreign_key = kg_foreign_key
-
-
-class Contest():
+class ReverseGeocode(): 
     """
-    A contest in the election
+    Fetchs a address and geocoding data from Google Geocoding API. 
+    Takes the lat, long as geo points.
+    Returns the address as a json object of a list of formatted addresses.
+    Documentation: 
+    https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding 
+    https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=YOUR_API_KEY
     """
+    
+    def __init__(self):
+        self._url = "https://maps.googleapis.com/maps/api/geocode/json?"
+        self._api_key = os.environ['GOOGLE_GEOCODING_API_KEY']
+    
+    def reverse_geocode(self, lat, long):
+        """
+        Make a call to the api to return election info
+        """
+        payload = {
+            "latlng": f"{lat},{long}",
+            "key": self._api_key
+        } 
+        response = requests.get(self._url, params=payload)
+        try: 
+            response.raise_for_status() 
+            return response.json()
+        except requests.exceptions.HTTPError as error:
+            # Error in request 
+            logging.error(error)
+            return 0
+        except requests.exceptions.RequestException as error:
+            # Catastrophic error 
+            logging.error(error)
+            raise
 
-    def __init__(self, office, district):
-        self.office = office
-        self.district = district
-
-
-class CandidateCreator():
+class VoterInfo(): 
     """
-    Fetches candidate data from the Google Civic API,
-    converts it into Candidate objects, and saves to the db
-    """
+    Fetchs voter information from Google Civic Information API.
+    Takes a correctly formatted address and returns the available election information. 
+    If not election Id is provided, returns the election(s) for which information is available.
+    The returned information *may* include: 
+        - "pollingLocations" = Polling places (including early polling sites) for a given residential street address
+        - "contests" = Contest and candidate information
+        - "state" = Election official information
 
+    Documentation: 
+    https://developers.google.com/civic-information/docs/v2/elections/voterInfoQuery
+    https://developers.google.com/civic-information/docs/v2/standard_errors
+    """
+    
     def __init__(self):
         self._url = "https://www.googleapis.com/civicinfo/v2/voterinfo"
-        self._api_key = os.environ["GOOGLE_CIVIC_API_KEY"]
-
-        # ID for the US 2018 Midterm Election
-        self._election_id = 6000
-
-    def create_candidates_from_response(self, response):
+        self._api_key = os.environ['GOOGLE_CIVIC_API_KEY']
+    
+    def fetch_voter_info(self, address, election_id=None):
         """
-        Convert the json response from the api into a candidate list
+        Make a call to the api to return election info
         """
-
-        try:
-            # a missing key may mean this data hasn't been populated yet
-            contests = response["contests"]
-        except KeyError:
-            return []
-
-        for contest in contests:
-            try:
-                office = contest["office"]
-                candidates = contest["candidates"]
-            except KeyError:
-                # some contests, such as referendums, may not have an office or candidates
-                # alternatively, we might filter by the type of contest
-                continue
-
-            self.create_candidates(
-                candidate_list=candidates,
-                contest=Contest(
-                    office=office,
-                    district=District(
-                        name=contest["district"]["name"],
-                        kg_foreign_key=contest["district"].get(
-                            "kgForeignKey", "")
-                    )
-                )
-            )
-
-    def create_candidates(self, candidate_list, contest):
-        """
-        Construct a list of candidates running for a particular office
-        """
-
-        for c in candidate_list:
-            human_name = HumanName(c["name"])
-
-            # get_or_create is failing, and I don't know why
-            try:
-                Candidate.objects.get(full_name=human_name.full_name)
-            except Candidate.DoesNotExist:
-                twitter_id, fb_id = self.get_social_channels(
-                    c.get("channels", ""))
-
-                Candidate(
-                    full_name=human_name.full_name,
-                    first_name=human_name.first,
-                    last_name=human_name.last,
-                    middle_initial=human_name.middle[0] if human_name.middle else '',
-                    suffix=human_name.suffix,
-                    ocd_id=contest.district.kg_foreign_key,
-                    office=contest.office,
-                    phone=c.get("phone", ""),
-                    email=c.get("email", ""),
-                    twitter_id=twitter_id,
-                    facebook_id=fb_id,
-                    party=c.get("party", "")
-                ).save()
-
-    def fetch_civic_data(self, address):
-        """
-        Make a call to the api to return election info for an address
-        """
-        payload = {"address": address,
-                   "key": self._api_key,
-                   "electionId": self._election_id,
-                   # "fields": "contests"
-                   }
-
-        return requests.get(self._url, params=payload)
-
-    def get_social_channels(self, channels):
-        """
-        Get Facebook and Twitter ids from json
-        """
-        twitter_id, fb_id = "", ""
-
-        if channels:
-            for channel in channels:
-                if channel["type"] == "Twitter":
-                    twitter_id = channel["id"]
-                elif channel["type"] == "Facebook":
-                    fb_id = channel["id"]
-
-        return twitter_id, fb_id
-
-
-class Command(BaseCommand):
-    def add_arguments(self, parser):
-        parser.add_argument("address",
-                            type=str,
-                            help="The address to query for candidates",
-                            nargs="?",
-                            default=None)
-
-    def handle(self, *args, **options):
-        locales_csv = os.path.join(settings.NEWSAPP_CSVS_DIR, "locales.csv")
-        df = pd.read_csv(locales_csv)
-
-        creator = CandidateCreator()
-
-        # if an address is passed as an arg, create candidates for that address
-        # otherwise, create candidates from all addresses in the locales csv
-        if options["address"]:
-            creator.create_candidates_from_response(
-                json.loads(creator.fetch_civic_data(options["address"]).text))
-        else:
-            for address in df["office_address"]:
-                response = creator.fetch_civic_data(address)
-                creator.create_candidates_from_response(
-                    json.loads(response.text))
+        payload = {
+            "address": address, 
+            "electionId": election_id,
+            "returnAllAvailableData": True,
+            "key": self._api_key
+        } 
+        response = requests.get(self._url, params=payload)
+        try: 
+            response.raise_for_status() 
+            return response.json()
+        except requests.exceptions.HTTPError as error:
+            # Error in request 
+            logging.error(f"Error: CivicInfo Api error for {address}")
+            logging.error(error)
+            raise
+        except requests.exceptions.RequestException as error:
+            # Catastrophic error 
+            logging.error(f"Fail: CivicInfo Api failed for {address}")
+            logging.error(error)
+            raise
+            
+# End
