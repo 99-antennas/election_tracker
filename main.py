@@ -33,7 +33,7 @@ def run_current_elections(event, context):
     # Store data in temp file
     if data:
         client.save_tmp_json('data.json', data)
-        logging.info(f"Data saved to '{filepath}''")
+        logging.info("Data saved to temp file.")
     else:
         logging.error("Error: No data returned.")
         return
