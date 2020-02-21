@@ -7,6 +7,7 @@ import os
 import logging
 import json
 import datetime as dt
+import time
 from src.election_fetcher import ElectionsFetcher
 from src.candidate_fetcher import VoterInfo
 from src.utils import CloudStorageClient
@@ -74,7 +75,7 @@ def run_voter_info(event, context):
     locales = civic.load_address_locales("address_locales",  "addresses_county.csv")
     
     # Retrieve Voter information data
-    for election in elections[0:2]:
+    for election in elections:
         election_id = election['id']
         election_name = election['name']
         election_ocdid = election['ocdDivisionId']
