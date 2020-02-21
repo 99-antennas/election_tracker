@@ -17,7 +17,7 @@ GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 storage_client = storage.Client()
 
 # Names for new buckets
-bucket_names = ["current_elections", "address_locales", "current_candidates"]
+bucket_names = ["current_elections", "address_locales", "current_candidates", "current_contests"]
 
 # Creates the new bucket
 for name in bucket_names: 
