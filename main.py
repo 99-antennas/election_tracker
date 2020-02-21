@@ -8,6 +8,7 @@ import logging
 import json
 import datetime as dt
 from src.election_fetcher import ElectionsFetcher
+from src.candidate_fetcher import VoterInfo
 from src.utils import CloudStorageClient
 
 # Functions
