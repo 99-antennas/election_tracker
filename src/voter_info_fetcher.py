@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-# Copyright 2020 99 Antennas LLC 
+# Copyright 2020 99 Antennas LLC
 
 """
 Fetch voter info from Google Civic Information API
@@ -13,7 +13,7 @@ import datetime as dt
 import pandas as pd
 import requests
 from google.cloud import storage
-from src.utils import CloudStorageClient
+from src.utils_cloud_storage import CloudStorageClient
 
 
 class ReverseGeocode(): 
@@ -51,7 +51,7 @@ class ReverseGeocode():
             logging.error(error)
             raise
 
-class VoterInfo(): 
+class VoterInfo():
     """
     Fetchs voter information from Google Civic Information API.
     Takes a correctly formatted address and returns the available election information. 
