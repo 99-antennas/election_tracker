@@ -9,8 +9,8 @@ import json
 import datetime as dt
 import time
 from src.election_fetcher import ElectionsFetcher
-from src.candidate_fetcher import VoterInfo
-from src.utils_cloud_storage import CloudStorageClient
+from src.voter_info_fetcher import VoterInfo
+from src.utils import CloudStorageClient
 
 # Functions
 def run_current_elections(event, context):
@@ -50,11 +50,44 @@ def run_current_elections(event, context):
     # Job status
     logging.info("Completed job fetch elections.")
     
+def run_pub_election(): 
+        """
+    Cloud function to run job to parse voter information data for current elections
+    from Google Civic Information API.
+    Retrieves county level data and sets the fips code as the identifier (`geo_id`)
+    Stores data in a cloud storage bucket as a json file.
+    """
     
+    # Job status
+    logging.info("Starting job fetch voter information")
+    logging.info("""Trigger: messageId {} published at {}""".format(context.event_id, context.timestamp))
+    
+    # Initiate job
+    civic = VoterInfo() 
+    
+    # Load elections, address data
+    logging.info("Load list of current elections.")
+    elections = civic.load_current_elections("current_elections",  "current_elections.json")
+    
+    # Retrieve Voter information data
+    for election in elections:
+        election_id = election['id']
+        election_name = election['name']
+        election_ocdid = election['ocdDivisionId']
+        
+        # Get state abbr from OCDid
+        election_ocdid = election_ocdid.split("/")[-1].split(":")[-1].upper()
+
+        logging.debug(f"election_id: {election_id}")
+        logging.debug(f"election_ocdid: {election_ocdid}")
+        logging.debug(f"election_name: {election_name}")
+
+
+
 def run_voter_info(event, context): 
     
     """
-    Cloud function to run job to fetch voter information data for current elections
+    Cloud function to run job to parse voter information data for current elections
     from Google Civic Information API.
     Retrieves county level data and sets the fips code as the identifier (`geo_id`)
     Stores data in a cloud storage bucket as a json file.
