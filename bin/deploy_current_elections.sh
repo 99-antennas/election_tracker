@@ -2,6 +2,9 @@
 
 # Load environment variables
 source .env
+export GCP_FUNCTION_NAME=FetchElections
+export GCP_PUBSUB_TOPIC=CivicInfoAPI-elections
+export GCP_FUNCTION_ENTRY_POINT=run_current_elections
 
 # Create requirements.txt
 # Note: syncs without re-locking and updating packages
