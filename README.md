@@ -128,9 +128,11 @@ The script will:
 - [Mirroring a Github Repo](https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository)
 - [Deploying a Cloud Function](https://hackingandslacking.com/creating-google-cloud-functions-running-python-3-7-8034e066a130)
 - [Cloud Function Runtime Environment](https://cloud.google.com/functions/docs/concepts/exec)
+- [Cloud Function Quotas](https://cloud.google.com/functions/quotas)
 - [Using Cloud Pub-Sub and Scheduler to trigger a Cloud Function](https://cloud.google.com/scheduler/docs/tut-pub-sub)
 - [Cron Commands](http://man7.org/linux/man-pages/man5/crontab.5.html)
 - [How to use Pub-sub message attributes](https://stackoverflow.com/questions/54950178/how-to-use-pub-sub-message-attributes-in-cloud-scheduler) 
+
 
 ## TODOs
 - PyTest Unit Tests
