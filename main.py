@@ -10,7 +10,7 @@ import datetime as dt
 import time
 from src.election_fetcher import ElectionsFetcher
 from src.candidate_fetcher import VoterInfo
-from src.utils import CloudStorageClient
+from src.utils_cloud_storage import CloudStorageClient
 
 # Functions
 def run_current_elections(event, context):
