@@ -16,6 +16,7 @@ nameparser = "*"
 google-cloud-storage = "*"
 jupyterlab = "*"
 tqdm = "*"
+google-cloud-pubsub = "*"
 
 [requires]
 python_version = "3.7"
