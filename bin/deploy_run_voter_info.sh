@@ -3,9 +3,8 @@
 # Load environment variables
 source .env
 export GCP_FUNCTION_NAME=FetchVoterInfo
-export GCP_PUBSUB_TOPIC=CivicInfoAPI-voterInfo
 export GCP_FUNCTION_ENTRY_POINT=run_voter_info
-export TRIGGER_BUCKET_NAME="current_elections"
+export GCP_PUBSUB_TOPIC=active-divisions
 
 # Create requirements.txt
 # Note: syncs without re-locking and updating packages
@@ -34,19 +33,9 @@ gcloud pubsub topics create $GCP_PUBSUB_TOPIC
 gcloud functions deploy $GCP_FUNCTION_NAME \
 --source https://source.developers.google.com/projects/$GCP_PROJECT_NAME/repos/$GCP_REPOSITORY_ID \
 --runtime python37 \
---trigger-topic $GCP_PUBSUB_TOPIC \
---trigger-resource $TRIGGER_BUCKET_NAME \ 
---trigger-event google.storage.object.finalize
+--trigger-bucket $TRIGGER_BUCKET_NAME \
 --entry-point $GCP_FUNCTION_ENTRY_POINT \
 --service-account api-requests@election-tracker-268319.iam.gserviceaccount.com \
 --set-env-vars GOOGLE_CIVIC_API_KEY=$GOOGLE_CIVIC_API_KEY,GOOGLE_GEOCODING_API_KEY=$GOOGLE_GEOCODING_API_KEY
-
-# Create Google Cloud Scheduler cron job
-gcloud scheduler jobs create pubsub CivicInfoApi-elections-daily \
---project $GCP_PROJECT_NAME \
---schedule="15 20 * * *" \
---topic $GCP_PUBSUB_TOPIC \
---message-body "civic info api elections daily" \
---max-retry-attempts 5
 
 #End
