@@ -162,8 +162,8 @@ def publish_active_divisions(event, context):
     futures = dict()
     
     # Parse election 
-    logging.info(f"{str(event)}")
-    election = event['attributes']
+    logging.info(f"{str(base64.b64decode(event).decode('utf-8'))}")
+    election = base64.b64decode(event['attributes']).decode('utf-8')
     election_id = election['election_id'] #renamed to avoid conflict
     election_name = election['name']
     election_ocdid = election['ocdDivisionId']
