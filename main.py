@@ -163,7 +163,7 @@ def publish_active_divisions(event, context):
     
     # Parse election 
     logging.debug(f"{str(event)}")
-    election = event['message']['attributes']
+    election = event['attributes']
     election_id = election['election_id'] #renamed to avoid conflict
     election_name = election['name']
     election_ocdid = election['ocdDivisionId']
