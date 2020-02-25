@@ -243,13 +243,13 @@ def run_voter_info(event, context):
     
     try: 
         division = event['attributes']
+        address = division['address']
+        geo_id = division['geo_id']
+        election_id = division['election_id']
     except Exception as error: 
         logging.error("Error: Message does not contain event attributes.")
         logging.error(error)
-
-    address = division['address']
-    geo_id = division['geo_id']
-    election_id = division['election_id']
+        raise
     
     civic = VoterInfo() 
     
