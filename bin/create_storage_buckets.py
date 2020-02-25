@@ -3,6 +3,7 @@
 # Copyright 2020 99 Antennas LLC 
 
 """
+FOR TESTING ONLY - USE DEPLOY SCRIPTS TO SETUP BUCKETS ASSOCIATED WITH FUNCTIONS
 Script to setup project Google Cloud Storage buckets. 
 https://cloud.google.com/storage/docs/xml-api/put-bucket-create
 """
