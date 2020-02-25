@@ -8,6 +8,7 @@ import logging
 import json
 import datetime as dt
 import time
+import base64
 from google.cloud import pubsub_v1
 from src.election_fetcher import ElectionsFetcher
 from src.voter_info_fetcher import VoterInfo
