@@ -164,11 +164,12 @@ def publish_active_divisions(event, context):
     futures = dict()
     
     # Parse election 
-    if 'attributes' in event: 
+    try: 
         election = event['attributes']
-    else: 
-        logging.error("Error: Event does not contain attribute data.")
-        raise
+    except Exception as error: 
+        logging.error("Error: Message does not contain event attributes.")
+        logging.error(error)
+
     election_id = election['election_id'] #renamed to avoid conflict
     election_name = election['name']
     election_ocdid = election['ocdDivisionId']
@@ -240,11 +241,12 @@ def run_voter_info(event, context):
     logging.info("Starting job to fetch voter information.")
     logging.info("""Trigger: messageId {} published at {}""".format(context.event_id, context.timestamp))
     
-    if 'attributes' in event: 
+    try: 
         division = event['attributes']
-    else: 
+    except Exception as error: 
         logging.error("Error: Message does not contain event attributes.")
-        raise
+        logging.error(error)
+
     address = division['address']
     geo_id = division['geo_id']
     election_id = division['election_id']
