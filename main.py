@@ -224,7 +224,7 @@ def publish_active_divisions(event, context):
 
     logging.info(f"Published active divisions for election {election_id} to {topic_name}")
 
-    def run_voter_info(event, context): 
+def run_voter_info(event, context): 
     """
     Retrieves voter information from Google Civic API
     Takes: 
