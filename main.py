@@ -166,16 +166,14 @@ def publish_active_divisions(event, context):
     # Parse election 
     try: 
         election = event['attributes']
-        election_id = election['election_id'] #renamed to avoid conflict
-        election_name = election['name']
-        election_ocdid = election['ocdDivisionId']
     except Exception as error: 
         logging.error("Error: Message does not contain event attributes.")
         logging.error(error)
-
-
-
-
+        raise
+    
+    election_id = election['election_id'] #renamed to avoid conflict
+    election_name = election['name']
+    election_ocdid = election['ocdDivisionId']
     # Get state abbr from OCDid
     election_ocdid = election_ocdid.split("/")[-1].split(":")[-1].upper()
 
