@@ -6,8 +6,8 @@ The project includes functions designed to be run as Google Cloud Functions, inc
 
 - Fetching current, active elections from [Google Civic Information API](https://developers.google.com/civic-information/docs/v2/elections/electionQuery)  
 Function: `run_current_elections()
-- Reverse geocoding lat/long coordinates to generate address using Google Geocoding API 
-- Fetching election information and candidate data from Google Civic Information API 
+- Reverse geocoding lat/long coordinates to generate addresses using Google Geocoding API 
+- Fetching election information (sometimes includes candidate data) from Google Civic Information API 
 - Transforming candidate data into longtidy csvs for easier extraction/db load.
 
 ## REQUIREMENTS
@@ -17,9 +17,9 @@ Required services:
 - Google Geocoding API 
 - Google Civic Information API 
 - Google Application Credentials with "Edit" level authorization to the following enabled project resources: 
+     - Permissions to create and manage service accounts
      - Google Cloud Functions 
      - Google Storage 
-     - Permissions to create and manage service accounts
      - Google App Engine (a Google Cloud Scheduler dependancy)
      - Stackdriver (logging)
      
@@ -76,7 +76,7 @@ jupyter lab
 
 ## TESTING 
 
-Cloud Functions do not rely on namespace (i.e. `if __name__ == "__main__":`). Therefore to test a function locally, you must ensure the virtual environment is active and invoke the function explicitly. 
+Cloud Functions do not rely on namespace (i.e. `if __name__ == "__main__":`). Therefore to test a function locally, you must ensure the virtual environment is active and invoke the function explicitly. (You should do thi prior to adding the `event`, `context` parameters to the function call prior to deployment.) In the future, the project will include unit tests. 
 
 ```
 pipenv run python -c 'from main import run_current_elections; run_current_elections()'
@@ -103,7 +103,8 @@ Create and deploy the Cloud Function and dependent Google Cloud resources by run
 **IMPORTANT: Commit and push your changes to Github before each deploy.** 
 
 ```
-sh ./bin/deploy.sh
+sh ./bin/<name_of_function>_deploy.sh
+sh ./bin/run_current_elections_deploy.sh
 ```
 The script will: 
 
@@ -131,15 +132,17 @@ The script will:
 - [Cloud Function Quotas](https://cloud.google.com/functions/quotas)
 - [Using Cloud Pub-Sub and Scheduler to trigger a Cloud Function](https://cloud.google.com/scheduler/docs/tut-pub-sub)
 - [Cron Commands](http://man7.org/linux/man-pages/man5/crontab.5.html)
+- [Pub Sub Subscription Types Explained](https://googleapis.dev/python/pubsub/latest/subscriber/index.html#pulling-a-subscription-synchronously)
 - [How to use Pub-sub message attributes](https://stackoverflow.com/questions/54950178/how-to-use-pub-sub-message-attributes-in-cloud-scheduler) 
 
 
 ## TODOs
+- Add additional Cloud Functions
 - PyTest Unit Tests
 - Setup Secrets manager
 - Rotate API keys
-- Add additional Cloud Functions
-- Convert deploy.sh to yaml
+- Setup Docker Image (replace shell deploy)
+- Deploy using Cloud Build 
 
 ## SUGGESTING CHANGES
 If you have suggestions, please submit a pull request.
