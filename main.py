@@ -163,8 +163,8 @@ def publish_active_divisions(event, context):
     futures = dict()
     
     # Parse election 
-    logging.info(f"{str(event.keys())}")
-    election = event.message.attributes
+    logging.info(dir(event))
+    election = event['attributes']
     election_id = election['election_id'] #renamed to avoid conflict
     election_name = election['name']
     election_ocdid = election['ocdDivisionId']
