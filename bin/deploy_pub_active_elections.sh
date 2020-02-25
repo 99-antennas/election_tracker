@@ -6,7 +6,6 @@ export GCP_FUNCTION_NAME=PubActiveElections
 export GCP_FUNCTION_ENTRY_POINT=publish_active_elections
 export TRIGGER_BUCKET_NAME=current_elections
 export GCP_PUBSUB_TOPIC=active_elections
-export GCP_NEW_BUCKET=active_elections
 
 # Create requirements.txt
 # Note: syncs without re-locking and updating packages
@@ -14,8 +13,7 @@ pipenv sync
 pipenv run pip freeze > requirements.txt
 
 # Create Cloud bucket
-# Note: If bucket exist this will generate an error - Ignore
-gsutil mb -p $GCP_PROJECT_NAME -c standard -l $GCP_COMPUTE_ZONE gs://$GCP_NEW_BUCKET
+# Not Applicable
 
 # Set the retention policy for bucket objects
 gsutil retention set 7d gs://$GCP_NEW_BUCKET
@@ -25,7 +23,6 @@ gcloud --quiet config set project $GCP_PROJECT_NAME
 
 # If not default, set region/zone
 gcloud --quiet config set compute/zone ${GCP_COMPUTE_ZONE}
-
 
 # Create PubSub topic
 # Note: If topic exist this will generate an error - Ignore
