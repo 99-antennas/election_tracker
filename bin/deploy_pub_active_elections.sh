@@ -5,7 +5,7 @@ source .env
 export GCP_FUNCTION_NAME=PubActiveElections
 export GCP_FUNCTION_ENTRY_POINT=publish_active_elections
 export TRIGGER_BUCKET_NAME=current_elections
-export GCP_PUBSUB_TOPIC=active_elections
+export GCP_PUBSUB_TOPIC=active-elections
 
 # Create requirements.txt
 # Note: syncs without re-locking and updating packages

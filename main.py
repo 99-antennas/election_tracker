@@ -100,6 +100,7 @@ def publish_active_elections(event, context):
         
         data = str(election['id'])
         
+        logging.info(f"Publishing message to {topic_path}")
         # When you publish a message, the client returns a future. Data must be a bytestring.
         futures.update({data: None})
         
@@ -163,12 +164,15 @@ def publish_active_divisions(event, context):
     futures = dict()
     
     # Parse election 
-    test = str(list(event.keys()))
-    logging.info(f"{test}")
-    election = event['attributes']
+    if 'attributes' in event: 
+        election = event['attributes']
+    else: 
+        logging.error("Error: Event does not contain attribute data.")
+        raise
     election_id = election['election_id'] #renamed to avoid conflict
     election_name = election['name']
     election_ocdid = election['ocdDivisionId']
+
 
     # Get state abbr from OCDid
     election_ocdid = election_ocdid.split("/")[-1].split(":")[-1].upper()
@@ -199,6 +203,7 @@ def publish_active_divisions(event, context):
     for index, row in active.iterrows():
         data = str(row["fips"])
         
+        logging.info(f"Publishing message to {topic_path}")
         futures.update({data: None})
 
         # When you publish a message, the client returns a future. Data must be a bytestring.
@@ -217,4 +222,4 @@ def publish_active_divisions(event, context):
     while futures:
         time.sleep(5)
 
-    logging.info(f"Published active divisions for election {election_id}")
+    logging.info(f"Published active divisions for election {election_id} to {topic_name}")
