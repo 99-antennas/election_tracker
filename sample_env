@@ -1,3 +1,6 @@
 GOOGLE_APPLICATION_CREDENTIALS = "/path/to/credentials.json"
 GOOGLE_CIVIC_API_KEY="your-api-key"
 GOOGLE_GEOCODING_API_KEY="your-api-key"
+GCP_PROJECT_NAME=your-project-name-1234
+GCP_REPOSITORY_ID=gcp_source_repository_name
+GCP_COMPUTE_ZONE=us-central1
