@@ -15,8 +15,10 @@ pipenv run pip freeze > requirements.txt
 
 # Create Cloud bucket
 # Note: If bucket exist this will generate an error - Ignore
-# pipenv run python ./bin/create_storage_buckets.py
-gsutil mb -c standard -l $GCP_COMPUTE_ZONE gs://$GCP_NEW_BUCKET --retention 7d
+gsutil mb -p $GCP_PROJECT_NAME -c standard -l $GCP_COMPUTE_ZONE gs://$GCP_NEW_BUCKET
+
+# Set the retention policy for bucket objects
+gsutil retention set 7d gs://$GCP_NEW_BUCKET
 
 # Set Google Cloud project
 gcloud --quiet config set project $GCP_PROJECT_NAME
@@ -38,5 +40,6 @@ gcloud functions deploy $GCP_FUNCTION_NAME \
 --trigger-bucket $TRIGGER_BUCKET_NAME \
 --entry-point $GCP_FUNCTION_ENTRY_POINT \
 --service-account api-requests@election-tracker-268319.iam.gserviceaccount.com \
+--set-env-vars GOOGLE_CIVIC_API_KEY=$GOOGLE_CIVIC_API_KEY,GOOGLE_GEOCODING_API_KEY=$GOOGLE_GEOCODING_API_KEY
 
 #End
