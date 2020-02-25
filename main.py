@@ -162,7 +162,7 @@ def publish_active_divisions(event, context):
     futures = dict()
     
     # Parse election 
-    election = event.data
+    election = event['attributes']
     election_id = election['election_id'] #renamed to avoid conflict
     election_name = election['name']
     election_ocdid = election['ocdDivisionId']

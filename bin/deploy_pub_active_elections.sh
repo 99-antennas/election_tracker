@@ -15,9 +15,6 @@ pipenv run pip freeze > requirements.txt
 # Create Cloud bucket
 # Not Applicable
 
-# Set the retention policy for bucket objects
-gsutil retention set 7d gs://$GCP_NEW_BUCKET
-
 # Set Google Cloud project
 gcloud --quiet config set project $GCP_PROJECT_NAME
 
