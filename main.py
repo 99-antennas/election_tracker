@@ -223,3 +223,41 @@ def publish_active_divisions(event, context):
         time.sleep(5)
 
     logging.info(f"Published active divisions for election {election_id} to {topic_name}")
+
+    def run_voter_info(event, context): 
+    """
+    Retrieves voter information from Google Civic API
+    Takes: 
+        Data returned from the active-divisons topic message: 
+        - election_id=election_id, # As returned by Civic Information API 
+        - address=address, # Address of geo division associated with election parsed from locales data.
+        - geo_id=geo_id # Fips code or similar geodivision identifier as parsed from locales data
+    Makes the API Call 
+    Saves the data to Google Cloud Storage
+    """
+    
+    # Job status
+    logging.info("Starting job to fetch voter information.")
+    logging.info("""Trigger: messageId {} published at {}""".format(context.event_id, context.timestamp))
+    
+    if 'attributes' in event: 
+        division = event['attributes']
+    else: 
+        logging.error("Error: Message does not contain event attributes.")
+        raise
+    address = division['address']
+    geo_id = division['geo_id']
+    election_id = division['election_id']
+    
+    civic = VoterInfo() 
+    
+    try: 
+        logging.info(f"Start VoterInfo call: {election_id}:{geo_id}") 
+        response = civic.fetch_voter_info(address, election_id)
+        response['geoid'] = {"fips":geo_id}
+        civic.save_voter_info(geo_id, response, bucket_name="voter_info")
+        time.sleep(1)
+        logging.debug(f"Completed VoterInfo call: {election_id}:{geo_id}")
+    except Exception as error: 
+        logging.error(f"Failed to retrieve data for {election_id}:{geo_id}")
+        logging.error(error)
