@@ -119,4 +119,99 @@ def publish_active_elections(event, context):
     while futures:
         time.sleep(5)
 
-    print(f"Published active elections for current elections as of {str(date)}")
+    logging.info(f"Published active elections for current elections as of {str(date)}")
+
+
+def publish_active_divisions(event, context):
+    """
+    Publishes parsed election data by division to a Pub/Sub topic with an error handler.
+    
+    For each division associated with an election, message includes: 
+        - election_id=election_id, # As returned by Civic Information API 
+        - address=address, # Address of geo division associated with election parsed from locales data.
+        - geo_id=geo_id # Fips code or similar geodivision identifier as parsed from locales data
+        
+    """
+    
+    def get_callback(f, data):
+        def callback(f):
+            try:
+                logging.info(f.result())
+                futures.pop(data)
+            except:  # noqa
+                logging.info("Please handle {} for {}.".format(f.exception(), data))
+
+        return callback
+    
+    # Job status
+    logging.info("Starting job to parse election.")
+    logging.info("""Trigger: messageId {} published at {}""".format(context.event_id, context.timestamp))
+    
+    # Initiate job
+    civic = VoterInfo() 
+    
+    logging.info("Load addreses by locale")
+    locales = civic.load_address_locales("address_locales",  "addresses_county.csv")
+    
+    project_id = "election-tracker-268319"
+    topic_name = "active-divisions"
+
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = publisher.topic_path(project_id, topic_name)
+
+    futures = dict()
+    
+    # Parse election 
+    election = event.data
+    election_id = election['election_id'] #renamed to avoid conflict
+    election_name = election['name']
+    election_ocdid = election['ocdDivisionId']
+
+    # Get state abbr from OCDid
+    election_ocdid = election_ocdid.split("/")[-1].split(":")[-1].upper()
+
+    logging.debug(f"election_id: {election_id}")
+    logging.debug(f"election_ocdid: {election_ocdid}")
+    logging.debug(f"election_name: {election_name}")
+
+    # Subset data by OCDid
+    # Except test election 
+    if election_name == 'VIP Test Election':
+        logging.debug("Election name 'VIP Test Election' excluded.")
+        return
+    # If election is national, return data for all records
+    elif election_ocdid == 'US':
+        active = locales.copy()
+    # If election is statewide, return data for all records in state. 
+    else: 
+        active = locales.loc[locales['state_abbr'] == election_ocdid, :].copy()
+    # Ensure active elections not null
+    try: 
+        assert(active.empty == False)
+    except Exception as e: 
+        logging.error("Unable to subset data by OCDid.")
+        raise
+
+    # publish active division
+    for index, row in active.iterrows():
+        data = str(row["fips"])
+        
+        futures.update({data: None})
+
+        # When you publish a message, the client returns a future. Data must be a bytestring.
+        future = publisher.publish(
+            topic_path, 
+            data=data.encode("utf-8"),
+            election_id=election_id, 
+            address=row['address'], 
+            geo_id=str(row["fips"])
+        )
+        futures[data] = future
+        # Publish failures shall be handled in the callback function.
+        future.add_done_callback(get_callback(future, data))
+
+    # Wait for all the publish futures to resolve before exiting.
+    while futures:
+        time.sleep(5)
+
+    logging.info(f"Published active divisions for election {election_id}")
