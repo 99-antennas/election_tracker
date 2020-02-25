@@ -4,7 +4,7 @@
 source .env
 export GCP_FUNCTION_NAME=PubActiveDivisions
 export GCP_FUNCTION_ENTRY_POINT=publish_active_divisions
-export TRIGGER_PUBSUB_TOPIC=active-elections
+export TRIGGER_PUBSUB_TOPIC=active_elections
 export GCP_PUBSUB_TOPIC=active-divisions
 
 # Create requirements.txt
