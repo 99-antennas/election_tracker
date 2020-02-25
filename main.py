@@ -10,7 +10,10 @@ import datetime as dt
 import time
 from src.election_fetcher import ElectionsFetcher
 from src.voter_info_fetcher import VoterInfo
-from src.utils import CloudStorageClient
+from src.utils_cloud_storage import CloudStorageClient
+
+# Local testing only 
+# GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
 # Functions
 def run_current_elections(event, context):
@@ -18,10 +21,8 @@ def run_current_elections(event, context):
     Cloud function to run job to fetch election data from Google Civic Information API.
     Stores data in a cloud storage bucket as a json file.
     """
-    # Local testing only 
-    # GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-    
     date = dt.datetime.now()
+    path = "/tmp/"
     client = CloudStorageClient()
     
     # Job status
@@ -33,8 +34,9 @@ def run_current_elections(event, context):
     data = get_elections.fetch_elections()
 
     # Store data in temp file
+    filename = 'data.json'
     if data:
-        client.save_tmp_json('data.json', data)
+        client.save_tmp_json(filename, data)
         logging.info("Data saved to temp file.")
     else:
         logging.error("Error: No data returned.")
@@ -42,6 +44,7 @@ def run_current_elections(event, context):
 
     # Upload temp file to Google Gloud Storage
     bucket_name = "current_elections"
+    filepath = os.path.join(path, filename)
     # Store file as most current
     client.upload_file(filepath, bucket_name, blob_name='current_elections.json')
     # Store file by date
@@ -51,13 +54,12 @@ def run_current_elections(event, context):
     logging.info("Completed job fetch elections.")
     
 def run_pub_election(): 
-        """
+    """
     Cloud function to run job to parse voter information data for current elections
     from Google Civic Information API.
     Retrieves county level data and sets the fips code as the identifier (`geo_id`)
     Stores data in a cloud storage bucket as a json file.
     """
-    
     # Job status
     logging.info("Starting job fetch voter information")
     logging.info("""Trigger: messageId {} published at {}""".format(context.event_id, context.timestamp))
@@ -81,7 +83,6 @@ def run_pub_election():
         logging.debug(f"election_id: {election_id}")
         logging.debug(f"election_ocdid: {election_ocdid}")
         logging.debug(f"election_name: {election_name}")
-
 
 
 def run_voter_info(event, context): 
